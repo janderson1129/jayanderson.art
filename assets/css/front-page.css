@@ -1,0 +1,771 @@
+/**
+ * Jay Anderson Art — Homepage Styles (front-page.css)
+ *
+ * Covers all sections in front-page.php:
+ *  1. Hero
+ *  2. Portfolio grid
+ *  3. Featured story
+ *  4. About strip
+ *  5. Prints preview
+ *  6. Contact CTA
+ *
+ * Design tokens are inherited from style.css
+ *
+ * @package jay-anderson-art
+ */
+
+/* ============================================================
+   SECTION 1 — HERO
+   ============================================================ */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - var(--nav-height));
+    max-height: 900px;
+}
+
+/* Left column — text content */
+.hero__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(3rem, 6vw, 6rem) var(--gutter);
+    padding-right: clamp(2rem, 4vw, 4rem);
+}
+
+.hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    font-weight: var(--weight-light);
+    line-height: 1.03;
+    color: var(--color-ink);
+    margin-bottom: var(--space-3);
+}
+
+.hero__title em {
+    font-style: italic;
+    color: var(--color-accent);
+}
+
+.hero__subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    font-style: italic;
+    font-weight: var(--weight-light);
+    color: var(--color-ink-mid);
+    margin-bottom: var(--space-4);
+}
+
+.hero__desc {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--color-ink-mid);
+    max-width: 400px;
+    margin-bottom: var(--space-8);
+}
+
+.hero__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-10);
+}
+
+.hero__stats {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-paper-warm);
+}
+
+.hero__stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: var(--weight-light);
+    color: var(--color-ink);
+    display: block;
+    line-height: 1;
+    margin-bottom: var(--space-1);
+}
+
+.hero__stat-label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-ink-light);
+    display: block;
+}
+
+/* Right column — image stack */
+.hero__right {
+    position: relative;
+    background: var(--color-paper-warm);
+    overflow: hidden;
+}
+
+.hero__image-stack {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+}
+
+.hero__image-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-ink-mid);
+}
+
+/* First image spans full height (both rows) */
+.hero__image-item--featured {
+    grid-column: 1;
+    grid-row: 1 / 3;
+}
+
+.hero__image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.6s var(--ease-out);
+}
+
+.hero__image-item:hover img {
+    transform: scale(1.03);
+}
+
+.hero__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--color-ink-mid);
+}
+
+/* Featured piece badge */
+.hero__image-badge {
+    position: absolute;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    background: rgba(247, 244, 239, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: var(--space-2) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hero__image-badge span:first-child {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--color-ink);
+    line-height: 1.2;
+}
+
+.hero__image-badge span:last-child {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   SECTION 2 — PORTFOLIO GRID
+   ============================================================ */
+.portfolio-section {
+    background: var(--color-paper-white);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 4px;
+}
+
+.portfolio-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-ink-mid);
+    cursor: pointer;
+}
+
+/* First item spans both rows for masonry effect */
+.portfolio-item--featured {
+    grid-row: 1 / 3;
+}
+
+.portfolio-item__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+
+.portfolio-item__image {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 0.5s var(--ease-out);
+}
+
+.portfolio-item--featured .portfolio-item__image {
+    min-height: 560px;
+}
+
+.portfolio-item__image--placeholder {
+    min-height: 280px;
+    background: var(--color-ink-mid);
+}
+
+/* Price tag — top right, visible on hover */
+.portfolio-item__price {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    background: rgba(247, 244, 239, 0.92);
+    backdrop-filter: blur(4px);
+    padding: 0.25rem 0.65rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: opacity var(--duration) var(--ease);
+    pointer-events: none;
+}
+
+/* Hover overlay — slides up from bottom */
+.portfolio-item__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26, 24, 22, 0.88) 0%, rgba(26, 24, 22, 0.2) 50%, transparent 75%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-5);
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease);
+}
+
+.portfolio-item__title {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+    font-weight: var(--weight-light);
+    font-style: italic;
+    color: var(--color-paper);
+    line-height: 1.2;
+    margin-bottom: var(--space-1);
+}
+
+.portfolio-item__meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    color: rgba(247, 244, 239, 0.6);
+    text-transform: uppercase;
+}
+
+/* Hover states */
+.portfolio-item:hover .portfolio-item__overlay,
+.portfolio-item:focus-within .portfolio-item__overlay {
+    opacity: 1;
+}
+
+.portfolio-item:hover .portfolio-item__price,
+.portfolio-item:focus-within .portfolio-item__price {
+    opacity: 1;
+}
+
+.portfolio-item:hover .portfolio-item__image {
+    transform: scale(1.03);
+}
+
+/* Sold badge */
+.badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    font-family: var(--font-body);
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.badge--sold {
+    background: var(--color-ink);
+    color: var(--color-paper);
+}
+
+/* scroll animation — fade up on enter */
+[data-animate] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+[data-animate].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   SECTION 3 — FEATURED STORY
+   ============================================================ */
+.story-section {
+    background: var(--color-paper-warm);
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+}
+
+.story-grid__image-wrap {
+    position: relative;
+}
+
+.story-grid__piece-num {
+    position: absolute;
+    top: -1.5rem;
+    left: -0.5rem;
+    font-family: var(--font-display);
+    font-size: 6rem;
+    font-weight: var(--weight-light);
+    color: rgba(26, 24, 22, 0.06);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+.story-grid__image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.story-grid__image--placeholder {
+    aspect-ratio: 4 / 5;
+    background: var(--color-ink-mid);
+}
+
+.story-grid__content {
+    padding-top: var(--space-8);
+}
+
+.story-grid__medium {
+    margin-bottom: var(--space-4);
+}
+
+.story-grid__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: var(--weight-light);
+    font-style: italic;
+    color: var(--color-ink);
+    line-height: 1.1;
+    margin-bottom: var(--space-5);
+}
+
+.story-grid__body {
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: var(--color-ink-mid);
+    margin-bottom: var(--space-6);
+}
+
+.story-grid__body p { margin-bottom: var(--space-3); }
+.story-grid__body p:last-child { margin-bottom: 0; }
+
+/* Specs table */
+.story-grid__specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4) var(--space-6);
+    border-top: 1px solid rgba(26, 24, 22, 0.1);
+    border-bottom: 1px solid rgba(26, 24, 22, 0.1);
+    padding: var(--space-5) 0;
+    margin-bottom: var(--space-6);
+}
+
+.story-spec__label {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-ink-light);
+    margin-bottom: var(--space-1);
+}
+
+.story-spec__value {
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+}
+
+.story-grid__price {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: var(--weight-light);
+    color: var(--color-ink);
+    margin-bottom: var(--space-6);
+}
+
+.story-grid__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+}
+
+.btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   SECTION 4 — ABOUT STRIP
+   ============================================================ */
+.about-section {
+    background: var(--color-ink);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 600px;
+}
+
+.about-section__image {
+    position: relative;
+    overflow: hidden;
+    background: #2e2b28;
+}
+
+.about-section__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.about-section__img-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: #2e2b28;
+}
+
+.about-section__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(3rem, 6vw, 6rem) var(--gutter);
+}
+
+.about-section__content .eyebrow {
+    color: var(--color-accent-light);
+}
+
+.about-section__content .rule {
+    background: var(--color-accent-light);
+}
+
+.about-section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: var(--weight-light);
+    color: var(--color-paper);
+    line-height: 1.08;
+    margin-bottom: var(--space-6);
+}
+
+.about-section__title em {
+    font-style: italic;
+    color: var(--color-accent-light);
+}
+
+.about-section__text {
+    font-size: var(--text-base);
+    line-height: 1.9;
+    color: rgba(247, 244, 239, 0.6);
+    margin-bottom: var(--space-4);
+    max-width: 460px;
+}
+
+.about-section__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: var(--space-6) 0;
+}
+
+.about-detail {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+}
+
+.about-detail__label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    min-width: 90px;
+    flex-shrink: 0;
+}
+
+.about-detail__value {
+    font-size: var(--text-sm);
+    color: rgba(247, 244, 239, 0.7);
+}
+
+/* ============================================================
+   SECTION 5 — PRINTS PREVIEW
+   ============================================================ */
+.prints-section {
+    background: var(--color-paper-white);
+}
+
+.prints-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.print-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.print-card__image-wrap {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--space-4);
+    background: var(--color-paper-warm);
+}
+
+.print-card__image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 0.5s var(--ease-out);
+}
+
+.print-card__image--placeholder {
+    aspect-ratio: 3 / 4;
+    background: var(--color-paper-warm);
+}
+
+.print-card:hover .print-card__image {
+    transform: scale(1.03);
+}
+
+.print-card__title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: var(--weight-regular);
+    color: var(--color-ink);
+    margin-bottom: var(--space-1);
+    line-height: 1.3;
+}
+
+.print-card__meta {
+    font-size: var(--text-xs);
+    color: var(--color-ink-light);
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-2);
+}
+
+.print-card__price {
+    font-size: var(--text-sm);
+    color: var(--color-ink-mid);
+}
+
+/* ============================================================
+   SECTION 6 — CONTACT CTA
+   ============================================================ */
+.contact-cta {
+    background: var(--color-ink);
+    padding: clamp(4rem, 8vw, 8rem) var(--gutter);
+    text-align: center;
+}
+
+.contact-cta__inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+}
+
+.contact-cta .eyebrow {
+    color: var(--color-accent-light);
+}
+
+.contact-cta__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    font-weight: var(--weight-light);
+    color: var(--color-paper);
+    line-height: 1.1;
+}
+
+.contact-cta__title em {
+    font-style: italic;
+    color: var(--color-accent-light);
+}
+
+.contact-cta__desc {
+    font-size: var(--text-base);
+    color: rgba(247, 244, 239, 0.5);
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: var(--space-2);
+}
+
+.contact-cta__email {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-style: italic;
+    color: var(--color-accent-light);
+    text-decoration: none;
+    transition: color var(--duration) var(--ease);
+}
+
+.contact-cta__email:hover {
+    color: var(--color-paper);
+}
+
+.contact-cta__social {
+    display: flex;
+    gap: var(--space-6);
+    margin-top: var(--space-2);
+}
+
+.contact-cta__social a {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: rgba(247, 244, 239, 0.35);
+    text-decoration: none;
+    transition: color var(--duration) var(--ease);
+}
+
+.contact-cta__social a:hover {
+    color: var(--color-accent-light);
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (≤1024px)
+   ============================================================ */
+@media ( max-width: 1024px ) {
+
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        max-height: none;
+    }
+
+    .hero__right {
+        height: 60vw;
+        max-height: 500px;
+    }
+
+    .hero__image-stack {
+        position: relative;
+        height: 100%;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .portfolio-item--featured {
+        grid-column: 1 / 3;
+        grid-row: auto;
+    }
+
+    .portfolio-item--featured .portfolio-item__image {
+        min-height: 400px;
+    }
+
+    .story-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+
+    .story-grid__piece-num {
+        display: none;
+    }
+
+    .about-section {
+        grid-template-columns: 1fr;
+    }
+
+    .about-section__image {
+        min-height: 50vw;
+        max-height: 400px;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (≤640px)
+   ============================================================ */
+@media ( max-width: 640px ) {
+
+    .hero__actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+
+    .hero__stats {
+        gap: var(--space-6);
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-item--featured {
+        grid-column: auto;
+    }
+
+    .story-grid__specs {
+        grid-template-columns: 1fr;
+    }
+
+    .prints-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .story-grid__actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+}
+
+@media ( max-width: 420px ) {
+    .prints-grid {
+        grid-template-columns: 1fr;
+    }
+}
