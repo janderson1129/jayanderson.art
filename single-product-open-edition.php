@@ -1,14 +1,14 @@
 <?php
 /**
- * WooCommerce Single Product Template
+ * WooCommerce Single Product Template — Open Edition Print
  *
  * Layout:
  *  1. Breadcrumb nav
  *  2. Product hero   — large image left, details right
- *       - Title, medium/dimensions, price
+ *       - Title, open edition badge, price
  *       - Artist story / description
  *       - Specs table
- *       - Add to cart / sold state
+ *       - Add to cart state
  *       - Shipping & archival note
  *  3. Gallery        — additional product images
  *  4. Related works  — 3-up grid from same category
@@ -44,6 +44,9 @@ while ( have_posts() ) :
     $main_img_full  = $main_img_id
         ? wp_get_attachment_image_url( $main_img_id, 'full' )
         : $main_img_url;
+
+    /* Edition data */
+    $edition_type   = get_field( 'edition_type' );
 
     /* Gallery images */
     $gallery_ids    = $product->get_gallery_image_ids();
@@ -100,20 +103,18 @@ while ( have_posts() ) :
                         loading="eager"
                         id="product-main-img"
                     >
-                    <?php if ( ! $in_stock ) : ?>
-                <div class="badge badge--sold badge--large"><?php esc_html_e( 'SOLD', 'jay-anderson-art' ); ?></div>
-            <?php endif; ?>
                     <span class="product-hero__zoom-hint" aria-hidden="true">
                         <?php esc_html_e( 'Click to enlarge', 'jay-anderson-art' ); ?>
-                    </span>  
-              
+                    </span>
+                </a>
             <?php else : ?>
                 <div class="product-hero__image product-hero__image--placeholder"></div>
-            <?php endif; ?></a>
+            <?php endif; ?>
 
+            <?php if ( ! $in_stock ) : ?>
+                <span class="badge badge--sold badge--large"><?php esc_html_e( 'Sold', 'jay-anderson-art' ); ?></span>
+            <?php endif; ?>
         </div>
-
-          
 
         <?php /* Thumbnail strip — if gallery images exist */ ?>
         <?php if ( ! empty( $gallery_ids ) ) : ?>
@@ -171,6 +172,13 @@ while ( have_posts() ) :
         <?php /* Title */ ?>
         <h1 class="product-hero__title"><?php the_title(); ?></h1>
 
+        <?php /* Open edition badge */ ?>
+        <div class="product-edition-badge product-edition-badge--open">
+            <span class="product-edition-badge__label">
+                <?php esc_html_e( 'Open Edition', 'jay-anderson-art' ); ?>
+            </span>
+        </div>
+
         <?php /* Year if set */ ?>
         <?php if ( $artwork['year'] ) : ?>
             <p class="product-hero__year"><?php echo esc_html( $artwork['year'] ); ?></p>
@@ -194,13 +202,9 @@ while ( have_posts() ) :
             __( 'Medium',     'jay-anderson-art' ) => $artwork['medium'],
             __( 'Dimensions', 'jay-anderson-art' ) => $artwork['dimensions'],
             __( 'Year',       'jay-anderson-art' ) => $artwork['year'],
-            __( 'Finish',     'jay-anderson-art' ) => $artwork['ready_to_hang']
-                ? __( 'Ready to hang — no glass required', 'jay-anderson-art' )
-                : '',
-            __( 'Materials',  'jay-anderson-art' ) => __( 'Archival, museum-grade', 'jay-anderson-art' ),
-            __( 'Edition',    'jay-anderson-art' ) => $is_original
-                ? __( 'One of a kind — original work', 'jay-anderson-art' )
-                : __( 'Limited edition print', 'jay-anderson-art' ),
+            __( 'Edition',    'jay-anderson-art' ) => __( 'Open edition print', 'jay-anderson-art' ),
+            __( 'Print type', 'jay-anderson-art' ) => __( 'Archival giclée', 'jay-anderson-art' ),
+            __( 'Materials',  'jay-anderson-art' ) => __( 'Archival, museum-grade paper', 'jay-anderson-art' ),
         ) );
         if ( $specs ) :
         ?>
@@ -230,12 +234,14 @@ while ( have_posts() ) :
                     </a>
                 </div>
             <?php endif; ?>
-            
         </div>
 
         <?php /* Archival / shipping reassurance */ ?>
         <ul class="product-assurances">
-          
+            <li class="product-assurance">
+                <span class="product-assurance__icon" aria-hidden="true">✦</span>
+                <?php esc_html_e( 'Archival giclée print on museum-grade paper', 'jay-anderson-art' ); ?>
+            </li>
             <li class="product-assurance">
                 <span class="product-assurance__icon" aria-hidden="true">✦</span>
                 <?php esc_html_e( 'Professionally packaged and insured shipping', 'jay-anderson-art' ); ?>
@@ -245,27 +251,26 @@ while ( have_posts() ) :
                 <?php esc_html_e( 'Questions? Email jay@jayanderson.art', 'jay-anderson-art' ); ?>
             </li>
         </ul>
-<?php /* ======================================================
-   FULL DESCRIPTION — if longer story exists
-   ====================================================== */ ?>
-<?php if ( $full_desc ) : ?>
-
-<section">
-    <div class="container container--text">
-        <span class="eyebrow2"><?php esc_html_e( 'About this piece', 'jay-anderson-art' ); ?></span>
-        <div class="rule2"></div>
-        <div>
-            <?php echo wp_kses_post( $full_desc ); ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 
     </div><!-- .product-hero__details -->
 
 </section><!-- .product-hero -->
 
 
+<?php /* ======================================================
+   FULL DESCRIPTION — if longer story exists
+   ====================================================== */ ?>
+<?php if ( $full_desc ) : ?>
+<section class="product-description section section--sm">
+    <div class="container container--text">
+        <span class="eyebrow"><?php esc_html_e( 'About this piece', 'jay-anderson-art' ); ?></span>
+        <div class="rule"></div>
+        <div class="product-description__body">
+            <?php echo wp_kses_post( $full_desc ); ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 
 <?php /* ======================================================
@@ -282,7 +287,7 @@ if ( ! empty( $related_ids ) ) :
     ) );
 ?>
 <section class="related-section section section--sm">
-    <div class="container2">
+    <div class="container">
 
         <div class="section-header">
             <div>
@@ -345,7 +350,7 @@ if ( ! empty( $related_ids ) ) :
    COMMISSION CTA — bottom strip
    ====================================================== */ ?>
 <section class="product-commission-cta">
-    <div class="container2">
+    <div class="container">
         <div class="product-commission-cta__inner" data-animate>
             <div>
                 <span class="eyebrow"><?php esc_html_e( 'Something personal', 'jay-anderson-art' ); ?></span>

@@ -67,6 +67,40 @@ function jay_setup() {
 }
 add_action( 'after_setup_theme', 'jay_setup' );
 
+
+
+
+
+
+/* ============================================================
+   EXCLUDE PRINTS FROM ALL WORK AND AVAILABLE WORK TABS
+   ============================================================ */
+add_action( 'pre_get_posts', function( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+    $queried = get_queried_object();
+    if ( $queried instanceof WP_Term && $queried->slug === 'original-work' ) {
+        /* Get all product IDs in print categories */
+        $print_ids = get_posts( array(
+            'post_type'      => 'product',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'tax_query'      => array(
+                array(
+                    'taxonomy' => 'product_cat',
+                    'field'    => 'slug',
+                    'terms'    => array( 'print', 'limited-edition', 'open-edition' ),
+                    'operator' => 'IN',
+                ),
+            ),
+        ) );
+        if ( ! empty( $print_ids ) ) {
+            $query->set( 'post__not_in', $print_ids );
+        }
+    }
+} );
+
 /* ============================================================
    CONTENT WIDTH
    ============================================================ */
@@ -86,7 +120,7 @@ function jay_image_sizes() {
     add_image_size( 'jay-grid',       800,  900, true );
 
     /* Single product — tall portrait crop */
-    add_image_size( 'jay-product',   1000, 1250, true );
+    add_image_size( 'jay-product',   1000, 1250, false );
 
     /* Thumbnail — small square for cart/related */
     add_image_size( 'jay-thumb',      400,  400, true );
@@ -192,6 +226,9 @@ function jay_enqueue_assets() {
         );
     }
 
+
+
+
     /* WooCommerce pages: enqueue shop styles */
     if ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) {
         wp_enqueue_style(
@@ -223,6 +260,27 @@ function jay_resource_hints( $urls, $relation_type ) {
     return $urls;
 }
 add_filter( 'wp_resource_hints', 'jay_resource_hints', 10, 2 );
+
+
+
+/* ============================================================
+   AVAILABLE WORK — STOCK FILTER
+   Excludes out of stock products when filter_stock=instock
+   ============================================================ */
+add_action( 'pre_get_posts', function( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+    if ( isset( $_GET['filter_stock'] ) && $_GET['filter_stock'] === 'instock' ) {
+        $meta_query   = $query->get( 'meta_query' ) ?: array();
+        $meta_query[] = array(
+            'key'     => '_stock_status',
+            'value'   => 'instock',
+            'compare' => '=',
+        );
+        $query->set( 'meta_query', $meta_query );
+    }
+} );
 
 /* ============================================================
    WIDGETS / SIDEBARS
@@ -416,6 +474,26 @@ function jay_availability_badge( $product ) {
         echo '<span class="badge badge--sold">' . esc_html__( 'Sold', 'jay-anderson-art' ) . '</span>';
     }
 }
+
+/* ============================================================
+   PRINT EDITION TEMPLATE ROUTING
+   Routes print products to the correct single template
+   based on the WooCommerce product category.
+   ============================================================ */
+add_filter( 'template_include', function( $template ) {
+    if ( is_singular( 'product' ) ) {
+        $post_id = get_queried_object_id();
+        if ( has_term( 'limited-edition', 'product_cat', $post_id ) ) {
+            $custom = locate_template( 'single-product-limited-edition.php' );
+            return $custom ?: $template;
+        }
+        if ( has_term( 'open-edition', 'product_cat', $post_id ) ) {
+            $custom = locate_template( 'single-product-open-edition.php' );
+            return $custom ?: $template;
+        }
+    }
+    return $template;
+}, 99 );
 
 /* ============================================================
    BODY CLASSES

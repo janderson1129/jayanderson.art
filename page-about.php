@@ -238,9 +238,7 @@ while ( have_posts() ) :
                 <a href="<?php echo esc_url( $orig_url ); ?>" class="btn btn--primary">
                     <?php esc_html_e( 'View originals', 'jay-anderson-art' ); ?>
                 </a>
-                <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--ghost">
-                    <?php esc_html_e( 'Commission a portrait', 'jay-anderson-art' ); ?>
-                </a>
+                
             </div>
 
         </div>

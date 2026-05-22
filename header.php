@@ -74,20 +74,3 @@
 
 <main class="site-main" id="main-content" role="main">
 <?php
-/**
- * Fallback navigation — displays key links if no menu is assigned.
- */
-function jay_fallback_nav() {
-    $shop_url    = function_exists( 'wc_get_page_id' ) ? get_permalink( wc_get_page_id( 'shop' ) ) : home_url( '/shop/' );
-    $prints_url  = get_term_link( 'print', 'product_cat' );
-    $about_url   = home_url( '/about/' );
-    $contact_url = home_url( '/contact/' );
-    ?>
-    <ul class="primary-nav__list">
-        <li><a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Work', 'jay-anderson-art' ); ?></a></li>
-        <li><a href="<?php echo esc_url( $about_url ); ?>"><?php esc_html_e( 'About', 'jay-anderson-art' ); ?></a></li>
-        <li><a href="<?php echo esc_url( is_wp_error( $prints_url ) ? $shop_url : $prints_url ); ?>"><?php esc_html_e( 'Prints', 'jay-anderson-art' ); ?></a></li>
-        <li><a href="<?php echo esc_url( $contact_url ); ?>"><?php esc_html_e( 'Contact', 'jay-anderson-art' ); ?></a></li>
-    </ul>
-    <?php
-}

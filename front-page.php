@@ -1,5 +1,7 @@
 <?php
 /**
+ * 
+ * Template Name: Home
  * Homepage Template (front-page.php)
  *
  * Sections:
@@ -29,14 +31,10 @@ $originals_query = new WP_Query( array(
         'field'    => 'slug',
         'terms'    => 'original-work',
     ) ),
-    'meta_query' => array( array(
-        'key'     => '_visibility',
-        'value'   => array( 'catalog', 'visible' ),
-        'compare' => 'IN',
-    ) ),
     'orderby' => 'menu_order',
     'order'   => 'ASC',
 ) );
+
 
 /* Prints — up to 3 for the preview strip */
 $prints_query = new WP_Query( array(
@@ -56,7 +54,7 @@ $featured_product = null;
 if ( $originals_query->have_posts() ) {
     $originals_query->the_post();
     $featured_product = wc_get_product( get_the_ID() );
-    rewind_posts();
+    wp_reset_postdata();
     $originals_query->rewind_posts();
 }
 
@@ -106,9 +104,7 @@ $orig_count = wp_count_posts( 'product' );
         </div>
 
         <div class="hero__stats animate-fade-up">
-            <?php
-            $total_originals = $originals_query->found_posts ?: 10;
-            ?>
+            <?php $total_originals = $originals_query->found_posts ?: 10; ?>
             <div class="hero__stat">
                 <span class="hero__stat-num"><?php echo esc_html( $total_originals ); ?></span>
                 <span class="hero__stat-label"><?php esc_html_e( 'Original works', 'jay-anderson-art' ); ?></span>
@@ -128,51 +124,48 @@ $orig_count = wp_count_posts( 'product' );
     <div class="hero__right" aria-hidden="true">
         <div class="hero__image-stack">
 
-            <?php
-            /* Pull first 3 originals for the hero image stack */
-            $hero_count = 0;
-            if ( $originals_query->have_posts() ) :
-                while ( $originals_query->have_posts() && $hero_count < 3 ) :
-                    $originals_query->the_post();
-                    $product     = wc_get_product( get_the_ID() );
-                    $img_id      = $product->get_image_id();
-                    $img_url     = $img_id ? wp_get_attachment_image_url( $img_id, 'jay-grid' ) : '';
-                    $is_featured = ( $hero_count === 0 );
-                    ?>
-                    <div class="hero__image-item <?php echo $is_featured ? 'hero__image-item--featured' : ''; ?>">
-                        <?php if ( $img_url ) : ?>
-                            <img
-                                src="<?php echo esc_url( $img_url ); ?>"
-                                alt="<?php echo esc_attr( get_the_title() ); ?>"
-                                <?php echo $is_featured ? 'loading="eager"' : 'loading="lazy"'; ?>
-                            >
-                        <?php else : ?>
-                            <div class="hero__image-placeholder"></div>
-                        <?php endif; ?>
-                        <?php if ( $is_featured ) : ?>
-                            <div class="hero__image-badge">
-                                <span><?php echo esc_html( get_the_title() ); ?></span>
-                                <span><?php echo wp_kses_post( $product->get_price_html() ); ?></span>
-                            </div>
-                        <?php endif; ?>
+    <?php
+    $hero_fields = array(
+        array( 'image' => 'hero_image_1', 'caption' => 'hero_caption_1' ),
+        array( 'image' => 'hero_image_2', 'caption' => 'hero_caption_2' ),
+        array( 'image' => 'hero_image_3', 'caption' => 'hero_caption_3' ),
+    );
+    foreach ( $hero_fields as $index => $field ) :
+        $img_id      = get_field( $field['image'] );
+        $img_url     = $img_id ? wp_get_attachment_image_url( $img_id, 'jay-hero' ) : '';
+        $img_alt     = $img_id ? get_post_meta( $img_id, '_wp_attachment_image_alt', true ) : '';
+        $acf_caption = get_field( $field['caption'] );
+        $caption     = $acf_caption ? $acf_caption : $img_alt;
+        $is_featured = ( $index === 0 );
+    ?>
+        <div class="hero__image-item <?php echo $is_featured ? 'hero__image-item--featured' : ''; ?>">
+            <?php if ( $img_url ) : ?>
+                <img
+                    src="<?php echo esc_url( $img_url ); ?>"
+                    alt="<?php echo esc_attr( $img_alt ); ?>"
+                    <?php echo $is_featured ? 'loading="eager"' : 'loading="lazy"'; ?>
+                >
+                <?php if ( $caption ) : ?>
+                    <div class="hero__image-caption">
+                        <span><?php echo esc_html( $caption ); ?></span>
                     </div>
-                    <?php
-                    $hero_count++;
-                endwhile;
-                wp_reset_postdata();
-                $originals_query->rewind_posts();
-            endif;
-            ?>
+                <?php endif; ?>
+            <?php else : ?>
+                <div class="hero__image-placeholder"></div>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
+    
 
-        </div><!-- .hero__image-stack -->
+</div><!-- .hero__image-stack -->
     </div><!-- .hero__right -->
 
 </section><!-- .hero -->
 
 
 <?php /* ======================================================
-   SECTION 2 — PORTFOLIO GRID
-   ====================================================== */ ?>
+   SECTION 2 — PORTFOLIO GRID (commented out)
+   ======================================================
 <section class="portfolio-section section section--sm" id="portfolio">
     <div class="container">
 
@@ -186,7 +179,7 @@ $orig_count = wp_count_posts( 'product' );
             <a href="<?php echo esc_url( $orig_url ); ?>" class="section-header__link">
                 <?php
                 printf(
-                    /* translators: %d: number of original works */
+                   
                     esc_html__( 'View all %d originals', 'jay-anderson-art' ),
                     esc_html( $originals_query->found_posts )
                 );
@@ -250,8 +243,8 @@ $orig_count = wp_count_posts( 'product' );
         <?php endif; ?>
 
     </div>
-</section><!-- .portfolio-section -->
-
+</section>
+  ====================================================== */ ?>
 
 <?php /* ======================================================
    SECTION 3 — FEATURED STORY
@@ -267,7 +260,7 @@ $orig_count = wp_count_posts( 'product' );
     $feat_story   = $feat_excerpt ?: wp_trim_words( wp_strip_all_tags( $feat_content ), 60 );
 ?>
 <section class="story-section section" id="featured-story">
-    <div class="container">
+    <div class="container2">
 
         <div class="section-header">
             <div>
@@ -376,17 +369,17 @@ $orig_count = wp_count_posts( 'product' );
 
 <?php /* ======================================================
    SECTION 4 — ABOUT STRIP
-   ====================================================== */ ?>
+
 <section class="about-section section" id="about">
 
     <div class="about-section__image" aria-hidden="true">
         <?php
-        /* Use a page featured image if an About page exists, otherwise placeholder */
+     
         $about_page = get_page_by_path( 'about' );
         if ( $about_page && has_post_thumbnail( $about_page->ID ) ) {
             echo get_the_post_thumbnail( $about_page->ID, 'jay-wide', array( 'class' => 'about-section__img' ) );
         } else {
-            /* Fallback — custom logo or text placeholder */
+          
             echo '<div class="about-section__img-placeholder"></div>';
         }
         ?>
@@ -403,7 +396,7 @@ $orig_count = wp_count_posts( 'product' );
         </h2>
 
         <?php
-        /* Pull excerpt from About page if it exists */
+       
         $about_excerpt = $about_page ? get_the_excerpt( $about_page ) : '';
         if ( $about_excerpt ) :
             echo '<p class="about-section__text">' . esc_html( $about_excerpt ) . '</p>';
@@ -443,6 +436,7 @@ $orig_count = wp_count_posts( 'product' );
     </div><!-- .about-section__content -->
 
 </section><!-- .about-section -->
+   ====================================================== */ ?>
 
 
 <?php /* ======================================================
@@ -450,7 +444,7 @@ $orig_count = wp_count_posts( 'product' );
    ====================================================== */ ?>
 <?php if ( $prints_query->have_posts() ) : ?>
 <section class="prints-section section section--sm" id="prints">
-    <div class="container">
+    <div class="container2">
 
         <div class="section-header">
             <div>
@@ -532,9 +526,8 @@ $orig_count = wp_count_posts( 'product' );
         <p class="contact-cta__desc">
             <?php esc_html_e( 'Whether you\'re a first-time collector or looking for a custom portrait, I\'d love to hear from you. Every inquiry gets a personal response.', 'jay-anderson-art' ); ?>
         </p>
-        <a href="mailto:jay@jayanderson.art" class="contact-cta__email">
-            jay@jayanderson.art
-        </a>
+
+
         <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn--outline-light">
             <?php esc_html_e( 'Send a message', 'jay-anderson-art' ); ?>
         </a>

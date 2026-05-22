@@ -33,7 +33,7 @@ while ( have_posts() ) :
    CONTACT HEADER
    ====================================================== */ ?>
 <section class="contact-header">
-    <div class="container">
+    <div class="container2">
         <div class="contact-header__inner" data-animate>
             <span class="eyebrow"><?php esc_html_e( 'Get in touch', 'jay-anderson-art' ); ?></span>
             <h1 class="contact-header__title">
@@ -51,7 +51,7 @@ while ( have_posts() ) :
    CONTACT GRID — form + info
    ====================================================== */ ?>
 <section class="contact-grid section section--sm">
-    <div class="container">
+    <div class="container2">
         <div class="contact-grid__inner">
 
             <?php /* Left — contact form from WP editor */ ?>
@@ -141,7 +141,7 @@ while ( have_posts() ) :
    COMMISSION SECTION
    ====================================================== */ ?>
 <section class="commission-section section">
-    <div class="container">
+    <div class="container2">
 
         <div class="commission-section__header" data-animate>
             <span class="eyebrow"><?php esc_html_e( 'Custom portraits', 'jay-anderson-art' ); ?></span>
