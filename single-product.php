@@ -240,9 +240,13 @@ while ( have_posts() ) :
                 <span class="product-assurance__icon" aria-hidden="true">✦</span>
                 <?php esc_html_e( 'Professionally packaged and insured shipping', 'jay-anderson-art' ); ?>
             </li>
+             <li class="product-assurance">
+                <span class="product-assurance__icon" aria-hidden="true">✦</span>
+                <?php esc_html_e( 'All framing, finishing, and construction by the artist ', 'jay-anderson-art' ); ?>
+            </li>
             <li class="product-assurance">
                 <span class="product-assurance__icon" aria-hidden="true">✦</span>
-                <?php esc_html_e( 'Questions? Email jay@jayanderson.art', 'jay-anderson-art' ); ?>
+                <?php esc_html_e( 'Have any questions?', 'jay-anderson-art' ); ?> <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Please contact me', 'jay-anderson-art' ); ?></a>
             </li>
         </ul>
 <?php /* ======================================================
