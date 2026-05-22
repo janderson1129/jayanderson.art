@@ -27,27 +27,41 @@ $is_prints       = ( $current_cat instanceof WP_Term && $current_cat->slug === '
 $is_shop         = is_shop();
 
 /* Category URLs */
-$shop_url      = get_permalink( wc_get_page_id( 'shop' ) );
-$orig_url      = get_term_link( 'original-work', 'product_cat' );
-$prints_url    = get_term_link( 'print',         'product_cat' );
-$orig_url      = is_wp_error( $orig_url )   ? $shop_url : $orig_url;
-$prints_url    = is_wp_error( $prints_url ) ? $shop_url : $prints_url;
+$shop_url           = get_permalink( wc_get_page_id( 'shop' ) );
+$orig_url           = get_term_link( 'original-work', 'product_cat' );
+$prints_url         = get_term_link( 'print',         'product_cat' );
+$limited_url        = get_term_link( 'limited-edition', 'product_cat' );
+$open_url           = get_term_link( 'open-edition',    'product_cat' );
+$orig_url           = is_wp_error( $orig_url )    ? $shop_url : $orig_url;
+$prints_url         = is_wp_error( $prints_url )  ? $shop_url : $prints_url;
+$limited_url        = is_wp_error( $limited_url ) ? $prints_url : $limited_url;
+$open_url           = is_wp_error( $open_url )    ? $prints_url : $open_url;
 
 /* Available Work tab URL — originals filtered to in-stock only */
-$available_url = add_query_arg( 'filter_stock', 'instock', $orig_url );
-$is_available  = ( $is_originals && isset( $_GET['filter_stock'] ) && $_GET['filter_stock'] === 'instock' );
-$is_all_work   = ( $is_originals && ! $is_available );
+$available_url      = add_query_arg( 'filter_stock', 'instock', $orig_url );
+$is_available       = ( $is_originals && isset( $_GET['filter_stock'] ) && $_GET['filter_stock'] === 'instock' );
+$is_all_work        = ( $is_originals && ! $is_available );
+$is_limited         = ( $current_cat instanceof WP_Term && $current_cat->slug === 'limited-edition' );
+$is_open            = ( $current_cat instanceof WP_Term && $current_cat->slug === 'open-edition' );
 
 
 /* Archive title & description */
 if ( $is_available ) {
     $archive_eyebrow = __( 'Ready to collect', 'jay-anderson-art' );
-    $archive_title   = sprintf( '%s <em>%s</em>', __( 'Available', 'jay-anderson-art' ), __( 'Works', 'jay-anderson-art' ) );
+    $archive_title   = sprintf( '%s <em>%s</em>', __( 'Available', 'jay-anderson-art' ), __( 'Originals', 'jay-anderson-art' ) );
     $archive_desc    = __( 'Original paintings and drawings available to purchase today. Each piece is unique and crafted with archival materials.', 'jay-anderson-art' );
 } elseif ( $is_all_work ) {
     $archive_eyebrow = __( 'Complete portfolio', 'jay-anderson-art' );
-    $archive_title   = sprintf( '%s <em>%s</em>', __( 'All', 'jay-anderson-art' ), __( 'Works', 'jay-anderson-art' ) );
+    $archive_title   = sprintf( '%s <em>%s</em>', __( 'All', 'jay-anderson-art' ), __( 'Originals', 'jay-anderson-art' ) );
     $archive_desc    = __( 'Every original painting and graphite drawing — available and sold — crafted with archival materials in Royal Oak, Michigan.', 'jay-anderson-art' );
+} elseif ( $is_limited ) {
+    $archive_eyebrow = __( 'Premium prints', 'jay-anderson-art' );
+    $archive_title   = sprintf( '%s <em>%s</em>', __( 'Limited', 'jay-anderson-art' ), __( 'Edition Prints', 'jay-anderson-art' ) );
+    $archive_desc    = __( 'Individually numbered and signed archival giclée prints on museum-quality paper. Each edition is strictly limited.', 'jay-anderson-art' );
+} elseif ( $is_open ) {
+    $archive_eyebrow = __( 'For every collector', 'jay-anderson-art' );
+    $archive_title   = sprintf( '%s <em>%s</em>', __( 'Open', 'jay-anderson-art' ), __( 'Edition Prints', 'jay-anderson-art' ) );
+    $archive_desc    = __( 'Archival giclée prints on museum-quality paper. A more accessible way to bring Jay\'s work into your space.', 'jay-anderson-art' );
 } elseif ( $is_prints ) {
     $archive_eyebrow = __( 'For every collector', 'jay-anderson-art' );
     $archive_title   = sprintf( '%s <em>%s</em>', __( 'Limited', 'jay-anderson-art' ), __( 'Edition Prints', 'jay-anderson-art' ) );
@@ -95,10 +109,16 @@ $total_products = wc_get_loop_prop( 'total' ) ?: $GLOBALS['woocommerce']->query-
                     <?php esc_html_e( 'All Originals', 'jay-anderson-art' ); ?>
                 </a>
                 <a
-                    href="<?php echo esc_url( $prints_url ); ?>"
-                    class="archive-tab <?php echo $is_prints ? 'archive-tab--active' : ''; ?>"
+                    href="<?php echo esc_url( $limited_url ); ?>"
+                    class="archive-tab <?php echo $is_limited ? 'archive-tab--active' : ''; ?>"
                 >
-                    <?php esc_html_e( 'Prints', 'jay-anderson-art' ); ?>
+                    <?php esc_html_e( 'Limited Prints', 'jay-anderson-art' ); ?>
+                </a>
+                <a
+                    href="<?php echo esc_url( $open_url ); ?>"
+                    class="archive-tab <?php echo $is_open ? 'archive-tab--active' : ''; ?>"
+                >
+                    <?php esc_html_e( 'Open Prints', 'jay-anderson-art' ); ?>
                 </a>
             </nav>
 
@@ -268,16 +288,18 @@ $total_products = wc_get_loop_prop( 'total' ) ?: $GLOBALS['woocommerce']->query-
 
         <?php else : ?>
 
-            <?php /* Empty state */ ?>
-            <div class="archive-empty" data-animate>
-                <span class="eyebrow"><?php esc_html_e( 'Nothing here yet', 'jay-anderson-art' ); ?></span>
-                <h2><?php esc_html_e( 'No works found', 'jay-anderson-art' ); ?></h2>
-                <p><?php esc_html_e( 'Check back soon — new pieces are added regularly.', 'jay-anderson-art' ); ?></p>
-                <a href="<?php echo esc_url( $shop_url ); ?>" class="btn btn--primary">
-                    <?php esc_html_e( 'Browse all work', 'jay-anderson-art' ); ?>
-                </a>
-            </div>
-
+         <?php /* Empty state */ ?>
+<div class="archive-empty" data-animate>
+    <span class="eyebrow"><?php esc_html_e( 'Nothing here now', 'jay-anderson-art' ); ?></span>
+    <h2><?php esc_html_e( 'Be the first to know', 'jay-anderson-art' ); ?></h2>
+    <p><?php esc_html_e( 'No works in this category are available right now — Sign up to be notified when new pieces drop.', 'jay-anderson-art' ); ?></p>
+    <div class="archive-empty__form">
+        <?php echo do_shortcode( '[YOUR_SHORTCODE_HERE]' ); ?>
+    </div>
+    <a href="<?php echo esc_url( $available_url ); ?>" class="btn btn--ghost">
+        <?php esc_html_e( 'Browse available originals', 'jay-anderson-art' ); ?>
+    </a>
+</div>
         <?php endif; ?>
 
      

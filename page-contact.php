@@ -80,17 +80,7 @@ while ( have_posts() ) :
             <?php /* Right — contact info */ ?>
             <div class="contact-info-col" data-animate>
 
-                <div class="contact-info-block">
-                    <h3 class="contact-info-block__title">
-                        <?php esc_html_e( 'Direct email', 'jay-anderson-art' ); ?>
-                    </h3>
-                    <a href="mailto:jay@jayanderson.art" class="contact-info-block__email">
-                        jay@jayanderson.art
-                    </a>
-                    <p class="contact-info-block__note">
-                        <?php esc_html_e( 'Replies within 1–2 business days.', 'jay-anderson-art' ); ?>
-                    </p>
-                </div>
+            
 
                 <div class="contact-info-block">
                     <h3 class="contact-info-block__title">

@@ -37,13 +37,15 @@ while ( have_posts() ) :
     $is_print       = has_term( 'print',          'product_cat', $product_id );
 
     /* Images */
-    $main_img_id    = $product->get_image_id();
-    $main_img_url   = $main_img_id
+    $main_img_id      = $product->get_image_id();
+    $main_img_url     = $main_img_id
         ? wp_get_attachment_image_url( $main_img_id, 'jay-product' )
         : wc_placeholder_img_src( 'jay-product' );
-    $main_img_full  = $main_img_id
+    $main_img_full    = $main_img_id
         ? wp_get_attachment_image_url( $main_img_id, 'full' )
         : $main_img_url;
+    $main_img_meta    = $main_img_id ? wp_get_attachment_metadata( $main_img_id ) : null;
+    $main_img_natural = $main_img_meta ? $main_img_meta['width'] : null;
 
     /* Gallery images */
     $gallery_ids    = $product->get_gallery_image_ids();
@@ -99,6 +101,9 @@ while ( have_posts() ) :
                         class="product-hero__image"
                         loading="eager"
                         id="product-main-img"
+                        <?php if ( $main_img_natural ) : ?>
+                            style="max-width: min(75%, <?php echo esc_attr( $main_img_natural *); ?>px);"
+                        <?php endif; ?>
                     >
                     <?php if ( ! $in_stock ) : ?>
                 <div class="badge badge--sold badge--large"><?php esc_html_e( 'SOLD', 'jay-anderson-art' ); ?></div>

@@ -37,13 +37,15 @@ while ( have_posts() ) :
     $is_print       = has_term( 'print',          'product_cat', $product_id );
 
     /* Images */
-    $main_img_id    = $product->get_image_id();
-    $main_img_url   = $main_img_id
+    $main_img_id      = $product->get_image_id();
+    $main_img_url     = $main_img_id
         ? wp_get_attachment_image_url( $main_img_id, 'jay-product' )
         : wc_placeholder_img_src( 'jay-product' );
-    $main_img_full  = $main_img_id
+    $main_img_full    = $main_img_id
         ? wp_get_attachment_image_url( $main_img_id, 'full' )
         : $main_img_url;
+    $main_img_meta    = $main_img_id ? wp_get_attachment_metadata( $main_img_id ) : null;
+    $main_img_natural = $main_img_meta ? $main_img_meta['width'] : null;
 
 /* Edition data */
 $edition_type   = get_field( 'edition_type', $product_id );
@@ -103,6 +105,9 @@ $edition_size   = get_field( 'edition_size', $product_id );
                         class="product-hero__image"
                         loading="eager"
                         id="product-main-img"
+                        <?php if ( $main_img_natural ) : ?>
+                            style="max-width: min(75%, <?php echo esc_attr( round( $main_img_natural * 0.75 ) ); ?>px);"
+                        <?php endif; ?>
                     >
                     <span class="product-hero__zoom-hint" aria-hidden="true">
                         <?php esc_html_e( 'Click to enlarge', 'jay-anderson-art' ); ?>
@@ -250,29 +255,27 @@ $edition_size   = get_field( 'edition_size', $product_id );
             </li>
             <li class="product-assurance">
                 <span class="product-assurance__icon" aria-hidden="true">✦</span>
-                <?php esc_html_e( 'Questions? Email jay@jayanderson.art', 'jay-anderson-art' ); ?>
+                <?php esc_html_e( 'Have any questions?', 'jay-anderson-art' ); ?> <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Please contact me', 'jay-anderson-art' ); ?></a>
             </li>
         </ul>
-
-    </div><!-- .product-hero__details -->
-
-</section><!-- .product-hero -->
-
-
 <?php /* ======================================================
    FULL DESCRIPTION — if longer story exists
    ====================================================== */ ?>
 <?php if ( $full_desc ) : ?>
-<section class="product-description section section--sm">
+
+<section">
     <div class="container container--text">
-        <span class="eyebrow"><?php esc_html_e( 'About this piece', 'jay-anderson-art' ); ?></span>
-        <div class="rule"></div>
-        <div class="product-description__body">
+        <span class="eyebrow2"><?php esc_html_e( 'About this piece', 'jay-anderson-art' ); ?></span>
+        <div class="rule2"></div>
+        <div>
             <?php echo wp_kses_post( $full_desc ); ?>
         </div>
     </div>
 </section>
 <?php endif; ?>
+    </div><!-- .product-hero__details -->
+
+</section><!-- .product-hero -->
 
 
 <?php /* ======================================================
