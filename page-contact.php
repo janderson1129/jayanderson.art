@@ -140,7 +140,7 @@ while ( have_posts() ) :
                 <em><?php esc_html_e( 'a portrait', 'jay-anderson-art' ); ?></em>
             </h2>
             <p class="commission-section__intro">
-                <?php esc_html_e( 'A limited number of portrait commissions are accepted each year. Here\'s what the process looks like.', 'jay-anderson-art' ); ?>
+                <?php esc_html_e( 'A limited number of portrait commissions are accepted each year. Here\'s what the process typically looks like.', 'jay-anderson-art' ); ?>
             </p>
         </div>
 
@@ -151,7 +151,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'Get in touch', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'Send a message describing who the portrait is of, any reference photos you have in mind, and your preferred medium (graphite, oil, or mixed media).', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'Send a message describing who the portrait is of, any reference photos you have in mind, and your preferred medium (graphite, oil, or mixed media). If you are a local client, arrangements can be made for a photo session.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
@@ -161,7 +161,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'Discuss & quote', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'Jay will respond with questions about size, reference material, and timeline, followed by a quote. A 50% deposit secures your spot.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'I will respond with questions about size, reference material, and timeline, followed by a quote. The signed contract and a 50% deposit secures your spot.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
@@ -171,7 +171,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'Progress updates', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'You\'ll receive photos at key stages of the work and have one opportunity to request adjustments before the piece is finalised.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'You\'ll receive progress updates per contract agreement and have an opportunity to review before the piece is finalized.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
@@ -181,23 +181,13 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'Delivery', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'The remaining balance is due before shipping. Your portrait arrives professionally packaged, insured, and accompanied by a certificate of authenticity.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'The remaining balance is due before shipping. Your art arrives professionally packaged, insured, and accompanied by a certificate of authenticity.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
 
         </div><!-- .commission-steps -->
 
-        <div class="commission-section__cta" data-animate>
-            <p class="commission-section__cta-note">
-                <?php esc_html_e( 'Typical turnaround is 6–10 weeks depending on complexity and current availability.', 'jay-anderson-art' ); ?>
-            </p>
-            <a href="mailto:jay@jayanderson.art?subject=Commission inquiry" class="btn btn--primary">
-                <?php esc_html_e( 'Start a commission inquiry', 'jay-anderson-art' ); ?>
-            </a>
-        </div>
-
-    </div>
 </section><!-- .commission-section -->
 
 <?php endwhile; ?>

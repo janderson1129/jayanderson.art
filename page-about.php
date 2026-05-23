@@ -45,7 +45,7 @@ while ( have_posts() ) :
 <?php /* ======================================================
    ABOUT HERO
    ====================================================== */ ?>
-<section class="about-hero <?php echo $hero_img_url ? 'about-hero--has-image' : ''; ?>">
+<section class="about-hero <?php echo $hero_img_url ? 'about-hero--has-image' : ''; ?>" style="padding-top: calc(var(--section-pad, 6rem) / 2);">
 
     <?php if ( $hero_img_url ) : ?>
         <div class="about-hero__image-wrap" aria-hidden="true">
@@ -64,17 +64,14 @@ while ( have_posts() ) :
             <span class="eyebrow about-hero__eyebrow">
                 <?php esc_html_e( 'The artist', 'jay-anderson-art' ); ?>
             </span>
-            <h1 class="about-hero__title">
-                <?php esc_html_e( 'James', 'jay-anderson-art' ); ?><br>
-                <em><?php esc_html_e( 'Anderson', 'jay-anderson-art' ); ?></em>
+            <h1 class="about-hero__title" style="font-size: clamp(2rem, 5vw, 3.5rem); white-space: nowrap;">
+                <?php esc_html_e( 'Jay', 'jay-anderson-art' ); ?> <em><?php esc_html_e( 'Anderson', 'jay-anderson-art' ); ?></em>
             </h1>
-            <?php if ( $page_excerpt ) : ?>
-                <p class="about-hero__tagline"><?php echo esc_html( $page_excerpt ); ?></p>
-            <?php else : ?>
+            
                 <p class="about-hero__tagline">
                     <?php esc_html_e( 'Contemporary fine artist · Royal Oak, Michigan', 'jay-anderson-art' ); ?>
                 </p>
-            <?php endif; ?>
+            
         </div>
     </div>
 
@@ -84,63 +81,110 @@ while ( have_posts() ) :
 <?php /* ======================================================
    BIO — photo + text
    ====================================================== */ ?>
-<section class="about-bio section">
+<section class="about-bio section" style="align-items: flex-start; overflow: visible;">
 
-    <div class="about-bio__image-col" aria-hidden="true">
-        <?php if ( has_post_thumbnail() ) : ?>
-            <?php the_post_thumbnail( 'jay-product', array(
-                'class'   => 'about-bio__image',
-                'loading' => 'lazy',
-            ) ); ?>
-        <?php else : ?>
-            <div class="about-bio__image-placeholder"></div>
-        <?php endif; ?>
+    <div class="about-bio__image-col" aria-hidden="true" style="background: transparent; align-self: flex-start; position: relative; overflow: visible; padding-top: 0; margin-top: 0;">
+        <?php
+        /* Build a gallery of up to 6 images attached to this page for the 3×2 grid.
+           Falls back gracefully: uses the featured image if fewer than 6 are attached. */
+        $gallery_ids = array();
+
+        /* 1. Try page-attached images first */
+        $attached = get_posts( array(
+            'post_type'      => 'attachment',
+            'post_mime_type' => 'image',
+            'post_parent'    => get_the_ID(),
+            'numberposts'    => 6,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ) );
+        foreach ( $attached as $att ) {
+            $gallery_ids[] = $att->ID;
+        }
+
+        /* 2. Pad with the featured image if needed */
+        if ( $hero_img_id && ! in_array( $hero_img_id, $gallery_ids ) ) {
+            array_unshift( $gallery_ids, $hero_img_id );
+        }
+
+        /* 3. Trim to 6 */
+        $gallery_ids = array_slice( $gallery_ids, 0, 6 );
+        ?>
+
+        <div class="about-bio__grid" style="
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 0.5rem;
+            width: 100%;
+            aspect-ratio: 3 / 2;
+            margin-top: 0;
+            padding-top: 0;
+        ">
+            <?php if ( ! empty( $gallery_ids ) ) : ?>
+                <?php foreach ( $gallery_ids as $img_id ) : ?>
+                    <div class="about-bio__grid-cell" style="overflow: hidden; border-radius: 2px;">
+                        <?php echo wp_get_attachment_image( $img_id, 'medium', false, array(
+                            'class'   => 'about-bio__grid-img',
+                            'loading' => 'lazy',
+                            'style'   => 'width:100%;height:100%;object-fit:cover;display:block;',
+                        ) ); ?>
+                    </div>
+                <?php endforeach; ?>
+                <?php /* Fill any empty cells so the grid always shows 6 slots */ ?>
+                <?php for ( $i = count( $gallery_ids ); $i < 6; $i++ ) : ?>
+                    <div class="about-bio__grid-cell about-bio__grid-cell--empty" style="background: var(--color-surface-2, #f0ece6); border-radius: 2px;"></div>
+                <?php endfor; ?>
+            <?php else : ?>
+                <?php for ( $i = 0; $i < 6; $i++ ) : ?>
+                    <div class="about-bio__grid-cell about-bio__grid-cell--empty" style="background: var(--color-surface-2, #f0ece6); border-radius: 2px;"></div>
+                <?php endfor; ?>
+            <?php endif; ?>
+        </div><!-- .about-bio__grid -->
+
     </div>
 
-    <div class="about-bio__content">
+    <div class="about-bio__content" style="align-self: flex-start; padding-top: 0;">
 
-        <span class="eyebrow"><?php esc_html_e( 'About Jay', 'jay-anderson-art' ); ?></span>
-        <div class="rule"></div>
-
-        <h2 class="about-bio__title">
-            <?php esc_html_e( 'Portraits that hold', 'jay-anderson-art' ); ?><br>
+        <h2 class="about-bio__title" style="margin-top: 0; padding-top: 0;">
+            <?php esc_html_e( 'Portraits that hold', 'jay-anderson-art' ); ?>
             <em><?php esc_html_e( 'time still', 'jay-anderson-art' ); ?></em>
         </h2>
 
-        <?php if ( $bio_main ) : ?>
+        <?php
+        /* Strip only gallery/image blocks from the content, preserving all text.
+           Parse by block type so we never accidentally touch paragraph content. */
+        $blocks = parse_blocks( $bio_main );
+        $text_blocks = array_filter( $blocks, function( $block ) {
+            return ! in_array( $block['blockName'], array( 'core/gallery', 'core/image' ), true );
+        } );
+        $bio_main_clean = '';
+        foreach ( $text_blocks as $block ) {
+            $bio_main_clean .= render_block( $block );
+        }
+        ?>
+        <?php if ( trim( $bio_main_clean ) ) : ?>
             <div class="about-bio__body">
-                <?php echo wp_kses_post( apply_filters( 'the_content', $bio_main ) ); ?>
-            </div>
-        <?php else : ?>
-            <div class="about-bio__body">
-                <p>
-                    <?php esc_html_e( 'I am a contemporary fine artist based in Royal Oak, Michigan, specialising in portrait paintings and drawings that explore the human form, emotion, and identity.', 'jay-anderson-art' ); ?>
-                </p>
-                <p>
-                    <?php esc_html_e( 'Influenced by classical and contemporary masters, my work uses archival materials and traditional technique to capture something true about the people I portray — the quiet moments, the unguarded expressions, the emotions that words can\'t reach.', 'jay-anderson-art' ); ?>
-                </p>
-                <p>
-                    <?php esc_html_e( 'Each piece begins with a photograph — often a casual moment, a fleeting expression — and through weeks of careful work becomes something permanent. Something that will outlast us all.', 'jay-anderson-art' ); ?>
-                </p>
+                <?php echo wp_kses_post( apply_filters( 'the_content', $bio_main_clean ) ); ?>
             </div>
         <?php endif; ?>
 
-        <dl class="about-bio__details">
-            <div class="about-bio__detail">
-                <dt><?php esc_html_e( 'Based in', 'jay-anderson-art' ); ?></dt>
-                <dd><?php esc_html_e( 'Royal Oak, Michigan', 'jay-anderson-art' ); ?></dd>
+        <dl class="about-bio__details" style="display: grid; grid-template-columns: auto auto; gap: 0.25rem 1rem;">
+            <div class="about-bio__detail" style="display: contents;">
+                <dt style="text-align: right;"><?php esc_html_e( 'Based in', 'jay-anderson-art' ); ?></dt>
+                <dd style="text-align: left; margin: 0;"><?php esc_html_e( 'Royal Oak, Michigan', 'jay-anderson-art' ); ?></dd>
             </div>
-            <div class="about-bio__detail">
-                <dt><?php esc_html_e( 'Medium', 'jay-anderson-art' ); ?></dt>
-                <dd><?php esc_html_e( 'Graphite, oil, mixed media', 'jay-anderson-art' ); ?></dd>
+            <div class="about-bio__detail" style="display: contents;">
+                <dt style="text-align: right;"><?php esc_html_e( 'Medium', 'jay-anderson-art' ); ?></dt>
+                <dd style="text-align: left; margin: 0;"><?php esc_html_e( 'Graphite, oil, mixed media', 'jay-anderson-art' ); ?></dd>
             </div>
-            <div class="about-bio__detail">
-                <dt><?php esc_html_e( 'Materials', 'jay-anderson-art' ); ?></dt>
-                <dd><?php esc_html_e( 'Archival, museum-grade', 'jay-anderson-art' ); ?></dd>
+            <div class="about-bio__detail" style="display: contents;">
+                <dt style="text-align: right;"><?php esc_html_e( 'Materials', 'jay-anderson-art' ); ?></dt>
+                <dd style="text-align: left; margin: 0;"><?php esc_html_e( 'Archival, museum-grade', 'jay-anderson-art' ); ?></dd>
             </div>
-            <div class="about-bio__detail">
-                <dt><?php esc_html_e( 'Commissions', 'jay-anderson-art' ); ?></dt>
-                <dd><?php esc_html_e( 'Limited availability', 'jay-anderson-art' ); ?></dd>
+            <div class="about-bio__detail" style="display: contents;">
+                <dt style="text-align: right;"><?php esc_html_e( 'Commissions', 'jay-anderson-art' ); ?></dt>
+                <dd style="text-align: left; margin: 0;"><?php esc_html_e( 'Limited availability', 'jay-anderson-art' ); ?></dd>
             </div>
         </dl>
 
@@ -166,61 +210,70 @@ while ( have_posts() ) :
 <?php /* ======================================================
    PROCESS — how Jay works
    ====================================================== */ ?>
-<section class="about-process section">
-    <div class="container">
+<section class="commission-section section">
+    <div class="container2">
 
-        <div class="about-process__header" data-animate>
+        <div class="commission-section__header" data-animate>
             <span class="eyebrow"><?php esc_html_e( 'The work', 'jay-anderson-art' ); ?></span>
-            <h2 class="about-process__title">
-                <?php esc_html_e( 'Craft &', 'jay-anderson-art' ); ?> <em><?php esc_html_e( 'process', 'jay-anderson-art' ); ?></em>
+            <h2 class="commission-section__title">
+                <?php esc_html_e( 'Craft &', 'jay-anderson-art' ); ?><br>
+                <em><?php esc_html_e( 'process', 'jay-anderson-art' ); ?></em>
             </h2>
         </div>
 
-        <div class="about-process__grid">
+        <div class="commission-steps">
 
-            <div class="about-process__item" data-animate>
-                <span class="about-process__num" aria-hidden="true">01</span>
-                <h3 class="about-process__item-title"><?php esc_html_e( 'The reference', 'jay-anderson-art' ); ?></h3>
-                <p class="about-process__item-body">
-                    <?php esc_html_e( 'Every portrait begins with a photograph — usually a candid moment rather than a posed portrait. The goal is to find the instant where the subject forgot the camera was there.', 'jay-anderson-art' ); ?>
-                </p>
+            <div class="commission-step" data-animate>
+                <span class="commission-step__num" aria-hidden="true">01</span>
+                <div class="commission-step__content">
+                    <h3 class="commission-step__title"><?php esc_html_e( 'The reference', 'jay-anderson-art' ); ?></h3>
+                    <p class="commission-step__body">
+                        <?php esc_html_e( 'Every portrait begins with a photograph — usually a candid moment rather than a posed portrait. The goal is to find the instant where the subject forgot the camera was there.', 'jay-anderson-art' ); ?>
+                    </p>
+                </div>
             </div>
 
-            <div class="about-process__item" data-animate>
-                <span class="about-process__num" aria-hidden="true">02</span>
-                <h3 class="about-process__item-title"><?php esc_html_e( 'The drawing', 'jay-anderson-art' ); ?></h3>
-                <p class="about-process__item-body">
-                    <?php esc_html_e( 'Graphite work begins with light gesture lines, gradually building tone through layered mark-making. For mixed media pieces, a graphite underpainting is established before oil or other media is introduced.', 'jay-anderson-art' ); ?>
-                </p>
+            <div class="commission-step" data-animate>
+                <span class="commission-step__num" aria-hidden="true">02</span>
+                <div class="commission-step__content">
+                    <h3 class="commission-step__title"><?php esc_html_e( 'The drawing', 'jay-anderson-art' ); ?></h3>
+                    <p class="commission-step__body">
+                        <?php esc_html_e( 'Graphite work begins with light gesture lines, gradually building tone through layered mark-making. For mixed media pieces, a graphite underpainting is established before oil or other media is introduced.', 'jay-anderson-art' ); ?>
+                    </p>
+                </div>
             </div>
 
-            <div class="about-process__item" data-animate>
-                <span class="about-process__num" aria-hidden="true">03</span>
-                <h3 class="about-process__item-title"><?php esc_html_e( 'The materials', 'jay-anderson-art' ); ?></h3>
-                <p class="about-process__item-body">
-                    <?php esc_html_e( 'All works are created on archival cradled panels using museum-grade materials selected for longevity. Most originals are designed to hang without glass, allowing direct engagement with the surface.', 'jay-anderson-art' ); ?>
-                </p>
+            <div class="commission-step" data-animate>
+                <span class="commission-step__num" aria-hidden="true">03</span>
+                <div class="commission-step__content">
+                    <h3 class="commission-step__title"><?php esc_html_e( 'The materials', 'jay-anderson-art' ); ?></h3>
+                    <p class="commission-step__body">
+                        <?php esc_html_e( 'All works are created on archival cradled panels using museum-grade materials selected for longevity. Most originals are designed to hang without glass, allowing direct engagement with the surface.', 'jay-anderson-art' ); ?>
+                    </p>
+                </div>
             </div>
 
-            <div class="about-process__item" data-animate>
-                <span class="about-process__num" aria-hidden="true">04</span>
-                <h3 class="about-process__item-title"><?php esc_html_e( 'The finish', 'jay-anderson-art' ); ?></h3>
-                <p class="about-process__item-body">
-                    <?php esc_html_e( 'Each piece is sealed and inspected before leaving the studio. Originals ship professionally packaged with a certificate of authenticity and a note from Jay about the work.', 'jay-anderson-art' ); ?>
-                </p>
+            <div class="commission-step" data-animate>
+                <span class="commission-step__num" aria-hidden="true">04</span>
+                <div class="commission-step__content">
+                    <h3 class="commission-step__title"><?php esc_html_e( 'The finish', 'jay-anderson-art' ); ?></h3>
+                    <p class="commission-step__body">
+                        <?php esc_html_e( 'Each piece is sealed and inspected before leaving the studio. Originals ship professionally packaged with a certificate of authenticity and a note from Jay about the work.', 'jay-anderson-art' ); ?>
+                    </p>
+                </div>
             </div>
 
-        </div><!-- .about-process__grid -->
+        </div><!-- .commission-steps -->
 
     </div>
-</section><!-- .about-process -->
+</section><!-- .commission-section -->
 
 
 <?php /* ======================================================
    WORK CTA — link to portfolio
    ====================================================== */ ?>
 <section class="about-cta">
-    <div class="container">
+    <div class="container2">
         <div class="about-cta__inner" data-animate>
 
             <div class="about-cta__text">

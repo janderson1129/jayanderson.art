@@ -16,7 +16,7 @@
         <div class="footer-brand">
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-brand__logo">Jay Anderson</a>
             <p class="footer-brand__tagline">
-                <?php esc_html_e( 'Contemporary fine art from Royal Oak, Michigan. Original portrait paintings and graphite drawings crafted with archival materials.', 'jay-anderson-art' ); ?>
+                <?php esc_html_e( 'Contemporary fine art from Royal Oak, Michigan - USA. Original portrait and figurative paintings, graphite, and mixed media artwork.', 'jay-anderson-art' ); ?>
             </p>
             <div class="footer-social">
                 <a href="https://www.instagram.com/jayanderson.art" target="_blank" rel="noopener noreferrer">
@@ -54,7 +54,7 @@
             <ul class="footer-col__list">
                 <li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About Jay', 'jay-anderson-art' ); ?></a></li>
                 <li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'jay-anderson-art' ); ?></a></li>
-                <li><a href="<?php echo esc_url( home_url( '/commissions/' ) ); ?>"><?php esc_html_e( 'Commissions', 'jay-anderson-art' ); ?></a></li>
+                <!-- <li><a href="<?php echo esc_url( home_url( '/commissions/' ) ); ?>"><?php esc_html_e( 'Commissions', 'jay-anderson-art' ); ?></a></li> -->
             </ul>
         </div>
 
@@ -95,7 +95,7 @@
             <?php esc_html_e( 'James Anderson · All rights reserved · Royal Oak, Michigan', 'jay-anderson-art' ); ?>
         </p>
         <p class="footer-copy">
-            <?php esc_html_e( 'Original art crafted with archival materials', 'jay-anderson-art' ); ?>
+            <?php esc_html_e( 'Original collectable art', 'jay-anderson-art' ); ?>
         </p>
     </div>
 

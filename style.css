@@ -269,23 +269,30 @@ button, input, select, textarea {
 /* Container */
 .container {
     width: 100%;
-    margin-top: var(--space-4);
+    margin-top: var(--space-2);
     /*max-width: var(--container-max);
     margin-left: auto;
     margin-right: auto;
     padding-left: var(--gutter);
     padding-right: var(--gutter);*/
 }
-.container2 {
+/* .container2 {
     width: 100%;
-    margin-top: var(--space-4);
+    margin-top: var(--space-2);
     max-width: var(--container-max);
     margin-left: auto;
     margin-right: auto;
     padding-left: var(--gutter);
     padding-right: var(--gutter);
-}
+} */
 
+.container2 {
+    max-width: var(--container-max, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--container-pad, 2rem);
+    padding-right: var(--container-pad, 2rem);
+}
 
 .container--wide {
     max-width: var(--container-wide);
@@ -297,8 +304,8 @@ button, input, select, textarea {
 
 /* Section padding */
 .section {
-    padding-top: var(--space-24);
-    padding-bottom: var(--space-24);
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
 }
 
 .section--sm {
@@ -630,6 +637,7 @@ button, input, select, textarea {
 .site-footer {
     background: var(--color-ink);
     color: var(--color-paper);
+    padding-top: 2rem;
 }
 
 .site-footer__main {
