@@ -102,7 +102,7 @@ while ( have_posts() ) :
                         loading="eager"
                         id="product-main-img"
                         <?php if ( $main_img_natural ) : ?>
-                            style="max-width: min(75%, <?php echo esc_attr( $main_img_natural *); ?>px);"
+                            style="max-width: min(75%, <?php echo esc_attr( $main_img_natural); ?>px);"
                         <?php endif; ?>
                     >
                     <?php if ( ! $in_stock ) : ?>
