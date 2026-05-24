@@ -89,7 +89,7 @@
 }
 
 .hero__stat-label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: #5B5B58;
@@ -401,7 +401,7 @@
 
 .story-spec__label {
     display: block;
-    font-size: 0.6rem;
+    font-size: 0.9rem;
     letter-spacing: var(--tracking-widest);
     text-transform: uppercase;
     color: var(--color-ink-light);

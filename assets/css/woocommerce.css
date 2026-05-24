@@ -18,8 +18,13 @@
    ============================================================ */
 .woo-page-header {
     background: var(--color-paper);
-    padding: clamp(3rem, 5vw, 5rem) 0 clamp(1.5rem, 2vw, 2rem);
-    border-bottom: 1px solid rgba(26, 24, 22, 0.08);
+    /* padding: clamp(3rem, 5vw, 5rem) 0 clamp(1.5rem, 2vw, 2rem);
+    border-bottom: 1px solid rgba(26, 24, 22, 0.08); */
+     max-width: var(--container-max, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--container-pad, 2rem);
+    padding-right: var(--container-pad, 2rem);
 }
 
 .woo-page-header__title {
@@ -54,11 +59,16 @@
     color: var(--color-ink-mid);
 }
 
-.woocommerce-info {
-    background: rgba(26, 24, 22, 0.04);
-    border-left: 3px solid var(--color-ink-light);
-    color: var(--color-ink-mid);
+.woocommerce-cart .woocommerce-info {
+    background: transparent;
+    border-left: none;
+    padding-left: var(--space-5);
 }
+
+.woocommerce-cart .woocommerce-info::before {
+    display: none;
+}
+
 
 .woocommerce-error {
     background: rgba(200, 50, 50, 0.06);
@@ -442,8 +452,13 @@
    ============================================================ */
 .generic-page-header {
     background: var(--color-paper);
-    padding: clamp(3rem, 5vw, 5rem) 0 clamp(1.5rem, 2vw, 2rem);
-    border-bottom: 1px solid rgba(26, 24, 22, 0.08);
+    /* padding: clamp(3rem, 5vw, 5rem) 0 clamp(1.5rem, 2vw, 2rem);
+    border-bottom: 1px solid rgba(26, 24, 22, 0.08); */
+     max-width: var(--container-max, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--container-pad, 2rem);
+    padding-right: var(--container-pad, 2rem);
 }
 
 .generic-page-header__title {
@@ -455,7 +470,13 @@
     line-height: 1.1;
 }
 
-.generic-page-content { background: var(--color-paper); }
+.generic-page-content { background: var(--color-paper); 
+
+ max-width: var(--container-max, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--container-pad, 2rem);
+    padding-right: var(--container-pad, 2rem);}
 
 .generic-page-hero-image { margin-bottom: var(--space-8); }
 
