@@ -228,7 +228,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'The reference', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'Every portrait begins with a photograph — usually a candid moment rather than a posed portrait. The goal is to find the instant where the subject forgot the camera was there.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'Every portrait begins with one or more photographic references. The goal is to seek out inspiration that matches the desired emotional impact.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
@@ -238,7 +238,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'The drawing', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'Graphite work begins with light gesture lines, gradually building tone through layered mark-making. For mixed media pieces, a graphite underpainting is established before oil or other media is introduced.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'Graphite work begins with light lines that guide placement of the art into the planned compostion, then gradually building tone through layered mark-making and blending. For mixed media pieces, a finished graphite drawing is established before oil or other media is introduced.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
@@ -248,7 +248,7 @@ while ( have_posts() ) :
                 <div class="commission-step__content">
                     <h3 class="commission-step__title"><?php esc_html_e( 'The materials', 'jay-anderson-art' ); ?></h3>
                     <p class="commission-step__body">
-                        <?php esc_html_e( 'All works are created on archival cradled panels using museum-grade materials selected for longevity. Most originals are designed to hang without glass, allowing direct engagement with the surface.', 'jay-anderson-art' ); ?>
+                        <?php esc_html_e( 'All works are created ousing archival materials and mounted to cradled panels using PVA or acrylic medium. Most originals are designed to hang without glass, allowing direct engagement with the surface.', 'jay-anderson-art' ); ?>
                     </p>
                 </div>
             </div>
