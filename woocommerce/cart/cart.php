@@ -16,7 +16,7 @@ get_header();
 ?>
 
 <section class="woo-page-header">
-    <div class="container">
+    <div class="container2">
         <div class="woo-page-header__inner">
             <span class="eyebrow"><?php esc_html_e( 'Your selection', 'jay-anderson-art' ); ?></span>
             <h1 class="woo-page-header__title">
@@ -27,7 +27,7 @@ get_header();
 </section>
 
 <section class="woo-page-content section section--sm">
-    <div class="container">
+    <div class="container2">
         <?php woocommerce_content(); ?>
     </div>
 </section>
